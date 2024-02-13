@@ -2,6 +2,8 @@ go 1.21.6
 
 use (
 	./challenge-1
+	./dining-philosophers-problem
 	./first-example
+	./producer-consumer
 	./second-example
 )
