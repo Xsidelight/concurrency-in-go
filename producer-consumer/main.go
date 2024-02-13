@@ -133,5 +133,24 @@ func main() {
 	}
 
 	// print out the ending message
+	color.Cyan("----------------------")
+	color.Cyan("Done done for the day!")
 
+	color.Cyan("Total pizzas made: %d", pizzasMade)
+	color.Cyan("Total pizzas failed: %d", pizzasFailed)
+	color.Cyan("Total pizzas attempted: %d", total)
+
+	switch {
+	case pizzasFailed > 9:
+		color.Red("It was an awful day!")
+	case pizzasFailed >= 6:
+		color.Red("It was a bad day!")
+	case pizzasFailed >= 4:
+		color.Yellow("It was an ok day!")
+	case pizzasFailed >= 2:
+		color.Yellow("It was a pretty good day!")
+	default:
+		color.Green("It was a great day!")
+
+	}
 }
