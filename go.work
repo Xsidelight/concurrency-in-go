@@ -6,5 +6,6 @@ use (
 	./first-example
 	./producer-consumer
 	./second-example
+	./simple-channels
 	./sleeping-barber-problem
 )
