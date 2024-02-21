@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func shout(ping chan string, pong chan string) {
+func shout(ping <-chan string, pong chan<- string) {
 	for {
 		s := <-ping
 
