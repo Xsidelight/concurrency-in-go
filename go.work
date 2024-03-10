@@ -1,6 +1,7 @@
 go 1.21.6
 
 use (
+	./buffered-channels
 	./challenge-1
 	./channel-select
 	./dining-philosophers-problem
