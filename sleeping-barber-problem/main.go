@@ -23,6 +23,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 
@@ -30,14 +31,14 @@ import (
 )
 
 // variables
-var seatingCapacity = 10
+var seatingCapacity = 2
 var arrivalRate = 100
 var cutDuration = 1000 * time.Millisecond
 var timeOpen = 10 * time.Second
 
 func main() {
 	// seed our random number generator
-	source := rand.NewSource(100)
+	source := rand.NewSource(20)
 	rand.New(source)
 
 	// print welcome message
@@ -62,6 +63,11 @@ func main() {
 
 	// add barbers
 	shop.addBarber("Frank")
+	shop.addBarber("Bob")
+	shop.addBarber("Mat")
+	shop.addBarber("Coco")
+	shop.addBarber("James")
+	shop.addBarber("Marshal")
 
 	// start the barbershop as a goroutine
 	shopClosing := make(chan bool)
@@ -72,12 +78,24 @@ func main() {
 		shopClosing <- true
 		shop.closeShopForDay()
 		closed <- true
-
 	}()
 
 	// add clients
+	i := 1
+
+	go func() {
+		for {
+			randomMilliseconds := rand.Int() % (2 * arrivalRate)
+			select {
+			case <-shopClosing:
+				return
+			case <-time.After(time.Millisecond * time.Duration(randomMilliseconds)):
+				shop.addClient(fmt.Sprintf("Client #%d", i))
+				i++
+			}
+		}
+	}()
 
 	// block until the barbershop is closed
-
-	time.Sleep(5 * time.Second)
+	<-closed
 }
