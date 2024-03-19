@@ -30,26 +30,26 @@ import (
 	"github.com/fatih/color"
 )
 
-// variables
+// Variables
 var seatingCapacity = 2
 var arrivalRate = 100
 var cutDuration = 1000 * time.Millisecond
 var timeOpen = 10 * time.Second
 
 func main() {
-	// seed our random number generator
+	// Seed our random number generator
 	source := rand.NewSource(20)
 	rand.New(source)
 
-	// print welcome message
+	// Print welcome message
 	color.Yellow("The Sleeping Barber Problem")
 	color.Yellow("---------------------------")
 
-	// create channels if we need any
+	// Create channels if we need any
 	clientChan := make(chan string, seatingCapacity)
 	doneChan := make(chan bool)
 
-	// create the barbershop
+	// Create the barbershop
 	shop := Barbershop{
 		ShopCapacity:    seatingCapacity,
 		CutDuration:     cutDuration,
@@ -61,7 +61,7 @@ func main() {
 
 	color.Green("The shop is open for the day!")
 
-	// add barbers
+	// Add barbers
 	shop.addBarber("Frank")
 	shop.addBarber("Bob")
 	shop.addBarber("Mat")
@@ -69,7 +69,7 @@ func main() {
 	shop.addBarber("James")
 	shop.addBarber("Marshal")
 
-	// start the barbershop as a goroutine
+	// Start the barbershop as a goroutine
 	shopClosing := make(chan bool)
 	closed := make(chan bool)
 
@@ -80,7 +80,7 @@ func main() {
 		closed <- true
 	}()
 
-	// add clients
+	//Adding clients to the barbershop at random intervals until the shop closes.
 	i := 1
 
 	go func() {
@@ -96,6 +96,6 @@ func main() {
 		}
 	}()
 
-	// block until the barbershop is closed
+	// Block until the barbershop is closed
 	<-closed
 }
