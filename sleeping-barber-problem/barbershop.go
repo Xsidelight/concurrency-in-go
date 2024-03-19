@@ -6,15 +6,17 @@ import (
 	"github.com/fatih/color"
 )
 
+// Barbershop represents a barber shop with its properties and methods.
 type Barbershop struct {
-	ShopCapacity    int
-	CutDuration     time.Duration
-	NumberOfBarbers int
-	BarberDoneChan  chan bool
-	ClientsChan     chan string
-	Open            bool
+	ShopCapacity    int           // Maximum capacity of the shop
+	CutDuration     time.Duration // Duration it takes to cut hair
+	NumberOfBarbers int           // Number of barbers available
+	BarberDoneChan  chan bool     // Channel to indicate barber is done
+	ClientsChan     chan string   // Channel for clients waiting for service
+	Open            bool          // Flag indicating if the shop is open
 }
 
+// addBarber adds a new barber to the barbershop.
 func (shop *Barbershop) addBarber(barber string) {
 	shop.NumberOfBarbers++
 
@@ -23,7 +25,7 @@ func (shop *Barbershop) addBarber(barber string) {
 		color.Yellow("%s goes to the waiting room to check for clients.", barber)
 
 		for {
-			// if there are no clients, the barber goes to sleep
+			// Check if there are no clients, barber goes to sleep
 			if len(shop.ClientsChan) == 0 {
 				color.Yellow("There is nothing to do, so %s takes a nap.", barber)
 				isSleeping = true
@@ -36,10 +38,10 @@ func (shop *Barbershop) addBarber(barber string) {
 					color.Yellow("%s wakes %s up.", client, barber)
 					isSleeping = false
 				}
-				// cut hair
+				// Perform hair cutting
 				shop.cutHair(barber, client)
 			} else {
-				// shop is closed, so send the barber home and close this goroutine
+				// Shop is closed, send the barber home and close the goroutine
 				shop.sendBarberHome(barber)
 				return
 			}
@@ -47,17 +49,20 @@ func (shop *Barbershop) addBarber(barber string) {
 	}()
 }
 
+// cutHair simulates the process of a barber cutting hair for a client.
 func (shop *Barbershop) cutHair(barber, client string) {
 	color.Green("%s is cutting %s's hair.", barber, client)
 	time.Sleep(shop.CutDuration)
 	color.Green("%s is finished cutting %s", barber, client)
 }
 
+// sendBarberHome sends the barber home when the shop is closed.
 func (shop *Barbershop) sendBarberHome(barber string) {
 	color.Cyan("%s is going home.", barber)
 	shop.BarberDoneChan <- true
 }
 
+// closeShopForDay closes the shop at the end of the day.
 func (shop *Barbershop) closeShopForDay() {
 	color.Cyan("Closing shop for the day.")
 
@@ -71,9 +76,9 @@ func (shop *Barbershop) closeShopForDay() {
 
 	color.Green("The barbershop is now closed for the day, and everyone has gone home.")
 	color.Green("---------------------------------------------------------------------")
-
 }
 
+// addClient adds a new client to the waiting room of the barbershop.
 func (shop *Barbershop) addClient(client string) {
 	color.Green("*** %s arrives!", client)
 
@@ -83,7 +88,6 @@ func (shop *Barbershop) addClient(client string) {
 			color.Yellow("%s takes a seat in the waiting room.", client)
 		default:
 			color.Red("The waiting room is full so %s leaves", client)
-
 		}
 	} else {
 		color.Red("The shop is already closed, so %s leaves", client)
