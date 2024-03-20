@@ -1,0 +1,23 @@
+# Concurrency in Go
+
+## Description
+
+This project explores the concept of concurrency in Go programming language. It provides examples and explanations of various concurrency patterns and techniques in Go.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Installation
+
+1. Clone the repository: `git clone https://github.com/your-username/concurrency-in-go.git`
+2. Change directory: `cd concurrency-in-go`
+3. Install dependencies: `go mod download`
+
+## Usage
+
+To run the project, use the following command:
