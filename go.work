@@ -1,10 +1,11 @@
-go 1.21.6
+go 1.22.1
 
 use (
 	./buffered-channels
 	./challenge-1
 	./channel-select
 	./dining-philosophers-problem
+	./final-project
 	./first-example
 	./producer-consumer
 	./second-example

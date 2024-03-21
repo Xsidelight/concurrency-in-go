@@ -1,6 +1,6 @@
 module github.com/Xsidelight/concurrency-in-go/producer-consumer
 
-go 1.21.6
+go 1.22.1
 
 require github.com/fatih/color v1.16.0
 
