@@ -2,15 +2,8 @@
 
 ## Description
 
-This project explores the concept of concurrency in Go programming language. It provides examples and explanations of various concurrency patterns and techniques in Go.
+This project explores the concept of concurrency in Go programming language. It provides examples and explanations of various concurrency patterns and techniques in Go. The project is based on the Udemy  course [Concurrency in Go](https://www.udemy.com/course/working-with-concurrency-in-go-golang) by Todd McLeod.
 
-## Table of Contents
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Examples](#examples)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
