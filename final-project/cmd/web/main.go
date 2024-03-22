@@ -5,6 +5,10 @@ import (
 	"log"
 	"os"
 	"time"
+
+	_ "github.com/jackc/pgconn"
+	_ "github.com/jackc/pgx/v4"
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 const webPort = "80"
@@ -13,7 +17,6 @@ func main() {
 	// connect to DB
 	db := initDB()
 	db.Ping()
-
 
 	// create sessions
 
@@ -34,8 +37,11 @@ func initDB() *sql.DB {
 	if conn == nil {
 		log.Panic("can't connect to database")
 	}
+	return conn
 }
 
+// connectToDB establishes a connection to the database and returns the connection object.
+// It retries the connection if it fails and backs off for 1 second between retries.
 func connectToDB() *sql.DB {
 	counts := 0
 
@@ -43,12 +49,12 @@ func connectToDB() *sql.DB {
 
 	for {
 		connection, err := openDB(dsn)
-		if err != nil {
-			log.Println("postgres is not yet ready...")
-		} else {
+		if err == nil {
 			log.Println("connected to database!")
 			return connection
 		}
+
+		log.Printf("postgres is not yet ready... \n%s", err.Error())
 
 		if counts > 10 {
 			return nil
@@ -56,8 +62,8 @@ func connectToDB() *sql.DB {
 
 		log.Println("Backing off for 1 second")
 		time.Sleep(1 * time.Second)
+		counts++
 		continue
-
 	}
 }
 
