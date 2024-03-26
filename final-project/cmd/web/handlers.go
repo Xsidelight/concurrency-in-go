@@ -56,7 +56,11 @@ func (app *Config) PostLoginPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Config) Logout(w http.ResponseWriter, r *http.Request) {
+	// clean up session
+	_ = app.Session.Destroy(r.Context())
+	_ = app.Session.RenewToken(r.Context())
 
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
 func (app *Config) RegisterPage(w http.ResponseWriter, r *http.Request) {
