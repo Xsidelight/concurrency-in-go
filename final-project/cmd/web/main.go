@@ -11,6 +11,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Xsidelight/concurrency-in-go/final-project/data"
 	"github.com/alexedwards/scs/redisstore"
 	"github.com/alexedwards/scs/v2"
 	"github.com/gomodule/redigo/redis"
@@ -45,6 +46,7 @@ func main() {
 		InfoLog:  infoLog,
 		ErrorLog: errorLog,
 		Wait:     &wg,
+		Models:   data.New(db),
 	}
 
 	// set up mail
