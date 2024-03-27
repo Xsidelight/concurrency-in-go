@@ -68,9 +68,19 @@ func (app *Config) RegisterPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Config) PostRegisterPage(w http.ResponseWriter, r *http.Request) {
+	// create user
 
+	// send an activation email
+
+	// subscribe the user to an account
 }
 
 func (app *Config) ActivateAccount(w http.ResponseWriter, r *http.Request) {
+	// validate url
 
+	// generate an invoice
+
+	// send an email with attachments
+
+	// send an email with the invoice attached
 }
