@@ -39,6 +39,15 @@ func (app *Config) PostLoginPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !validPassword {
+		// in production you may want to track the number of logins
+		msg := Message{
+			To:      email,
+			Subject: "Failed login attempt",
+			Data:    "Invalid login attempt!",
+		}
+
+		app.sendEmail(msg)
+
 		app.Session.Put(r.Context(), "error", "Invalid credentials.")
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
