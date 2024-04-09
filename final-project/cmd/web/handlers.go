@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strconv"
 
 	"github.com/Xsidelight/concurrency-in-go/final-project/data"
 )
@@ -45,7 +46,7 @@ func (app *Config) PostLoginPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !validPassword {
-		// in production you may want to track the number of logins
+		// in production, you may want to track the number of logins
 		msg := Message{
 			To:      email,
 			Subject: "Failed login attempt",
@@ -164,14 +165,46 @@ func (app *Config) ActivateAccount(w http.ResponseWriter, r *http.Request) {
 
 func (app *Config) SubscribeToPlan(w http.ResponseWriter, r *http.Request) {
 	// get the id of the plan that is chosen
+	id := r.URL.Query().Get("id")
+
+	planID, _ := strconv.Atoi(id)
 
 	// get the plan from the database
+	plan, err := app.Models.Plan.GetOne(planID)
+	if err != nil {
+		app.Session.Put(r.Context(), "error", "Unable to find plan.")
+		http.Redirect(w, r, "/members/plans", http.StatusSeeOther)
+		return
+	}
 
 	// get the user from the session
-
-	// generate an invoice
+	user, ok := app.Session.Get(r.Context(), "user").(data.User)
+	if !ok {
+		app.Session.Put(r.Context(), "error", "Log in first!")
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
 
 	// send an email with the invoice attached
+	app.Wait.Add(1)
+
+	go func() {
+		defer app.Wait.Done()
+
+		invoice, err := app.getInvoice(user, plan)
+		if err != nil {
+			app.ErrorChan <- err
+		}
+
+		message := Message{
+			To:       user.Email,
+			Subject:  "Your invoice",
+			Data:     invoice,
+			Template: "invoice",
+		}
+
+		app.sendEmail(message)
+	}()
 
 	// generate a pdf manual
 
@@ -182,13 +215,11 @@ func (app *Config) SubscribeToPlan(w http.ResponseWriter, r *http.Request) {
 	// redirect
 }
 
-func (app *Config) ChooseSubscription(w http.ResponseWriter, r *http.Request) {
-	if !app.Session.Exists(r.Context(), "userID") {
-		app.Session.Put(r.Context(), "warning", "You must log in to see this page!")
-		http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
-		return
-	}
+func (app *Config) getInvoice(u data.User, plan *data.Plan) (string, error) {
+	return plan.PlanAmountFormatted, nil
+}
 
+func (app *Config) ChooseSubscription(w http.ResponseWriter, r *http.Request) {
 	plans, err := app.Models.Plan.GetAll()
 	if err != nil {
 		app.ErrorLog.Println(err)
