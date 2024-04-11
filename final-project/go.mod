@@ -10,6 +10,7 @@ require (
 	github.com/gomodule/redigo v1.9.2
 	github.com/jackc/pgconn v1.14.3
 	github.com/jackc/pgx/v4 v4.18.3
+	github.com/phpdave11/gofpdf v1.4.2
 	github.com/vanng822/go-premailer v1.20.2
 	github.com/xhit/go-simple-mail/v2 v2.16.0
 	golang.org/x/crypto v0.20.0
